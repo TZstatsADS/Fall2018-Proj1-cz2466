@@ -5,7 +5,7 @@ output:
   html_document:
     df_print: paged
 ---
-
+ 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
@@ -85,7 +85,7 @@ stop_words <- stop_words %>%
 ```
 
 ### Step 6 - Combining stems and dictionary into the same tibble
-
+ 
 Here we combine the stems and the dictionary into the same "tidy" object.
 
 ```{r tidy stems with dictionary}
