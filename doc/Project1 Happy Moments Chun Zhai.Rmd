@@ -18,6 +18,7 @@ library(ngram)
 library(shiny) 
 library(ggplot2)
 library(reshape2)
+library(lemon)
 ```
 
 ### Step 1 - Load the processed text data along with demographic information on contributors
@@ -117,6 +118,7 @@ I discover that great amount of people are from USA and India, and there are 99 
 mycountry<-as.data.frame(table(hm_data$country))
 mycountryupdated<-mycountry[order(mycountry$Freq, decreasing = T),]
 mycountrytop10<-mycountryupdated[1:10,]
+
 colnames(mycountrytop10) <- c("Country", "Count")
 Countrylist<-c("USA", "India", "Venezuela", "Canada", "UK", "Philippines", "Vietnam", "Brazil", 
                          "Mexico", "Australia")
@@ -127,6 +129,7 @@ There are more male being asked than famale, and more single being asked than ma
 ```{r} 
 table(hm_data$gender)
 table(hm_data$marital)
+
 agesub<-na.omit(as.numeric(hm_data$age[which(as.numeric(hm_data$age)<120)]))
 hist(agesub, main = 'Histogram of Age', xlab='Age',col="pink")
 median(agesub)
@@ -139,6 +142,7 @@ mytext<-as.data.frame(hm_data)[hm_data$country %in% mycountrytop10$Country,]
 textcount<-nchar(mytext$original_hm)
 textcountry<-mytext$country
 textdataframe<-data.frame(textcountry,textcount)
+
 ggplot(data = textdataframe, aes(x = textcount)) +
 geom_histogram(color="darkblue", fill="lightblue") +
 facet_wrap(~ textcountry, scales="free",nrow = 4)
@@ -156,6 +160,7 @@ quantile_of_text<-aggregate(textdataframe[, 2], list(textdataframe$textcountry),
 colnames(quantile_of_text)<-c("Countries","length")
 quantile_of_text$length<-round(quantile_of_text$length)
 quantile_of_text
+
 s<-
 "Countries length.0% length.25% length.50% length.75% length.100%
      AUS        13         41         56         93         297
@@ -169,8 +174,10 @@ s<-
      VEN        11         49         74        111         766
      VNM        15         31         46         63         336
 "
+
 d1 <- read.delim(textConnection(s), sep="")
 d1 <- melt(d1, id.vars="Countries")
+
 ggplot(d1, aes(Countries,value, col=variable)) + 
   geom_point() + 
   stat_smooth()
@@ -190,7 +197,66 @@ d2 %>% tidyr::gather("id", "value", 2:6) %>%
 India, Venezuela, USA and UK seem to have the highest mean and median caompare to other top 10 countries. So I decide to study more on these four countries.
 
 ```{r}
+four_countries<-as.data.frame(hm_data)[hm_data$country %in% c('USA','IND','VEN','GBR'),]
 
+split<-split(four_countries, four_countries$country)
+list_fourcountries<-lapply(split, function(y) 
+ output<-list(max(nchar(y$original_hm)),
+              max(nchar(y$original_hm)[nchar(y$original_hm)!=max(nchar(y$original_hm))]),
+              max(nchar(y$original_hm)[nchar(y$original_hm)!=max(nchar(y$original_hm))]
+                  [nchar(y$original_hm)[nchar(y$original_hm)!=max(nchar(y$original_hm))]
+                    !=max(nchar(y$original_hm)[nchar(y$original_hm)!=max(nchar(y$original_hm))])])
+              )
+)
+
+list_fourcountries<-as.data.frame(list_fourcountries)
+colnames(list_fourcountries)<-c('GBR1','GBR2','GBR3','IND1','IND2','IND3',
+                                'USA1','USA2','USA3','VEN1','VEN2','VEN3')
+list_fourcountries<-data.frame(t(list_fourcountries))
+list_fourcountries<-cbind(countries = rownames(list_fourcountries), list_fourcountries) 
+rownames(list_fourcountries)<-c()
+colnames(list_fourcountries)<-c('Country_rank','Value')
+list_fourcountries
+
+ggplot(data=list_fourcountries, aes(x = Country_rank, y= Value, fill = Country_rank)) +
+geom_bar(stat="identity")+
+scale_colour_gradient2()+
+coord_flip()
+```
+
+I select 3 original_hms that have the most charactors in the response sentences for each of the four countries (India, Venezuela, USA and UK), and I would like to see what these sentences are. 
+
+```{r}
+GBR1<-four_countries[which(nchar(four_countries$original_hm)==1233 
+                           & four_countries$country=='GBR'),]
+GBR2<-four_countries[which(nchar(four_countries$original_hm)==410 
+                           & four_countries$country=='GBR'),]
+GBR3<-four_countries[which(nchar(four_countries$original_hm)==318 
+                           & four_countries$country=='GBR'),]
+
+IND1<-four_countries[which(nchar(four_countries$original_hm)==6550 
+                           & four_countries$country=='IND'),]
+IND2<-four_countries[which(nchar(four_countries$original_hm)==6532 
+                           & four_countries$country=='IND'),]
+IND3<-four_countries[which(nchar(four_countries$original_hm)==5348 
+                           & four_countries$country=='IND'),]
+
+USA1<-four_countries[which(nchar(four_countries$original_hm)==6557 
+                           & four_countries$country=='USA'),]
+USA2<-four_countries[which(nchar(four_countries$original_hm)==2882 
+                           & four_countries$country=='USA'),]
+USA3<-four_countries[which(nchar(four_countries$original_hm)==2274 
+                           & four_countries$country=='USA'),]
+
+VEN1<-four_countries[which(nchar(four_countries$original_hm)==766 
+                           & four_countries$country=='VEN'),]
+VEN2<-four_countries[which(nchar(four_countries$original_hm)==727 
+                           & four_countries$country=='VEN'),]
+VEN3<-four_countries[which(nchar(four_countries$original_hm)==606 
+                           & four_countries$country=='VEN'),]
+
+sentence_fourcountries<-rbind(GBR1,GBR2,GBR3,IND1,IND2,IND3,USA1,USA2,USA3,VEN1,VEN2,VEN3)
+sentence_fourcountries
 ```
 
 ### Run the R Shiny app
