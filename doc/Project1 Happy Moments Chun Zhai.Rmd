@@ -351,7 +351,7 @@ Furthermore, I think the answers of developed countries may be a little differen
 In top 3 longest answers, there is a women from Venezuela says she could feel a sense of placidity and happiness from a soft morning, although she lives in a country that has difficult times. And the other two answers are also not talking about a long-lasting or big event. 
 In top 3 shortest answers, people from Venezuela tend to talked about moments that are more commonly happened in our lifes, even if all the shortest answers tend to talk about smaller events compared with the longest answers.
 
-However, I am not making further inference based on these results because the total number of respondents from different countries are quite different. It is not fair to only compare the numbers along. In addition, there could be some other reasons that are not directly related to this study, but still have influences on the study. 
+However, I am not making further inference based on these results because the total numbers of respondents from different countries are quite different. It is not fair to only compare the numbers along. In addition, there could be some other reasons that are not directly related to this study, but still have influences on the study. 
 
 ### Run the R Shiny app
 
