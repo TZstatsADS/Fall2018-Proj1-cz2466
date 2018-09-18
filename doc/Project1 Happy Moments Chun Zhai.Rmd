@@ -259,6 +259,22 @@ sentence_fourcountries<-rbind(GBR1,GBR2,GBR3,IND1,IND2,IND3,USA1,USA2,USA3,VEN1,
 sentence_fourcountries
 ```
 
+UK: I found that for the selected three long answers in UK, all the the reflection periods are three months. So people trend to describe a story of their lifes, or a feeling caused by some events that can last for long time, such as "a very good traning program" and "spring has arrived".
+
+India: However, the reflection period is 24 hours for the longest answer in India. The answer is about a special moment on "most beautiful symbol of eternal love" when the author visited Taj Mahal. 
+The second longest answer is about a trip to Velankanni. The author talked about how he planed the trip before travlling and some memorable experiences during the trip. 
+The third longest answer is about what can make us happy in general, not a specific event or moment. The answer is more like a study report including conclusions like "exercise more, 7 minutes might be enough for happiness", "sleep more can make you less sensitive to negative emotions" and "a short commute is worth more than a big house if we move closer to work".
+
+USA: The reflection period is 24 hours for the longest answer in USA as well. This seems to be the same story with the longest answer in India, but other information of respondents are quite different. I doubt whether there are some mistake when people collected these answers originally.
+The second longest answer is about a summer vacation from Delhi to Ooty. The reflection period is 3 months.
+The third longest answer is about an experience of "helping a blind man to cross the street". The reflection period is also 3 months, but the author talked about a less than one-day unforgettable expeience.
+
+Venezuela: The longest answer is a moment about coming across a girl on the street. The reflection period is 24 hours.
+The second longest answer is about a moment of watching a son falling asleep by a mom. The reflection period is 24 hours.
+The third longest answer is about a moment of seeing blue sky and green trees on a soft moring. The author also mentioned that she lives in a country that has difficult times. The reflection period is 24 hours.
+
+Conclusion: For the very long answers, the reflection periods tend to be 3 months. However, the reflection periods for the long answers in Venezuela are all 24 hours. This may be because the longest answers in Venezuela are much shorter than the longest answers in the other three countries I research on.
+
 ### Run the R Shiny app
 
 ```{r shiny app, warning=FALSE, message=FALSE}
