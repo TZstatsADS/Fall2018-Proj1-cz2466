@@ -215,10 +215,10 @@ colnames(list_fourcountries)<-c('GBR1','GBR2','GBR3','IND1','IND2','IND3',
 list_fourcountries<-data.frame(t(list_fourcountries))
 list_fourcountries<-cbind(countries = rownames(list_fourcountries), list_fourcountries) 
 rownames(list_fourcountries)<-c()
-colnames(list_fourcountries)<-c('Country_rank','Value')
+colnames(list_fourcountries)<-c('Country_rank_max','Value')
 list_fourcountries
 
-ggplot(data=list_fourcountries, aes(x = Country_rank, y= Value, fill = Country_rank)) +
+ggplot(data=list_fourcountries, aes(x = Country_rank_max, y= Value, fill = Country_rank_max)) +
 geom_bar(stat="identity")+
 scale_colour_gradient2()+
 coord_flip()
@@ -275,6 +275,67 @@ The third longest answer is about a moment of seeing blue sky and green trees on
 
 Conclusion: For the very long answers, the reflection periods tend to be 3 months. However, the reflection periods for the long answers in Venezuela are all 24 hours. This may be because the longest answers in Venezuela are much shorter than the longest answers in the other three countries I research on.
 
+I would like to make some further conclusions, but let me do more research on the top 3 shortest answers for the same four countries before writing them down.
+
+```{r}
+list_fourcountries2<-lapply(split, function(y) 
+ output2<-list(min(nchar(y$original_hm)),
+              min(nchar(y$original_hm)[nchar(y$original_hm)!=min(nchar(y$original_hm))]),
+              min(nchar(y$original_hm)[nchar(y$original_hm)!=min(nchar(y$original_hm))]
+                  [nchar(y$original_hm)[nchar(y$original_hm)!=min(nchar(y$original_hm))]
+                    !=min(nchar(y$original_hm)[nchar(y$original_hm)!=min(nchar(y$original_hm))])])
+              )
+)
+
+list_fourcountries2<-as.data.frame(list_fourcountries2)
+colnames(list_fourcountries2)<-c('GBR1','GBR2','GBR3','IND1','IND2','IND3',
+                                'USA1','USA2','USA3','VEN1','VEN2','VEN3')
+list_fourcountries2<-data.frame(t(list_fourcountries2))
+list_fourcountries2<-cbind(countries = rownames(list_fourcountries2), list_fourcountries2) 
+rownames(list_fourcountries2)<-c()
+colnames(list_fourcountries2)<-c('Country_rank_min','Value')
+list_fourcountries2
+
+ggplot(data=list_fourcountries2, aes(x = Country_rank_min, y= Value, fill = Country_rank_min)) +
+geom_bar(stat="identity")+
+scale_colour_gradient2()+
+coord_flip()
+```
+
+```{r}
+GBR1_2<-four_countries[which(nchar(four_countries$original_hm)==15
+                           & four_countries$country=='GBR'),]
+GBR2_2<-four_countries[which(nchar(four_countries$original_hm)==19
+                           & four_countries$country=='GBR'),]
+GBR3_2<-four_countries[which(nchar(four_countries$original_hm)==21
+                           & four_countries$country=='GBR'),]
+
+IND1_2<-four_countries[which(nchar(four_countries$original_hm)==11
+                           & four_countries$country=='IND'),]
+IND2_2<-four_countries[which(nchar(four_countries$original_hm)==12 
+                           & four_countries$country=='IND'),]
+IND3_2<-four_countries[which(nchar(four_countries$original_hm)==13
+                           & four_countries$country=='IND'),]
+
+USA1_2<-four_countries[which(nchar(four_countries$original_hm)==6
+                           & four_countries$country=='USA'),]
+USA2_2<-four_countries[which(nchar(four_countries$original_hm)==7
+                           & four_countries$country=='USA'),]
+USA3_2<-four_countries[which(nchar(four_countries$original_hm)==8
+                           & four_countries$country=='USA'),]
+
+VEN1_2<-four_countries[which(nchar(four_countries$original_hm)==11
+                           & four_countries$country=='VEN'),]
+VEN2_2<-four_countries[which(nchar(four_countries$original_hm)==14
+                           & four_countries$country=='VEN'),]
+VEN3_2<-four_countries[which(nchar(four_countries$original_hm)==15
+                           & four_countries$country=='VEN'),]
+
+sentence_fourcountries2<-rbind(GBR1_2,GBR2_2,GBR3_2,IND1_2,IND2_2,IND3_2,USA1_2,USA2_2,USA3_2,VEN1_2,VEN2_2,VEN3_2)
+sentence_fourcountries2
+```
+
+For the short answers, 
 ### Run the R Shiny app
 
 ```{r shiny app, warning=FALSE, message=FALSE}
