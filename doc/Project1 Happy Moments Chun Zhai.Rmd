@@ -2,9 +2,15 @@
 title: "Project1 Happy Moments Chun Zhai"
 author: "Chun Zhai"
 date: "September 10, 2018"
-output: html_document
+output: html_notebook
 runtime: shiny
 ---
+
+In this project, I conduct data analysis and visualization on different variables, including age, gender, marital status and country. Then I find that country is the variable I am most interested in (since there are so many countries in this data set and each country corresponds to various answers). I decide to study on the relaionships among country, original_hm and reflection_period. Finally, I discover that there could be some hidden patterns for the answers after spending time exploring them on different countries.
+
+## Part 1 - R Shiny
+
+First, I work on the processed_moments data set with R Shiny to get a general idea about the answers of happy moments.
 
 ```{r load libraries, warning=FALSE, message=FALSE}
 
@@ -21,7 +27,7 @@ library(reshape2)
 library(lemon)
 ```
 
-### Step 1 - Load the processed text data along with demographic information on contributors
+### Load the processed text data along with demographic information on contributors
 
 We use the processed data for our analysis and combine it with the demographic information available.
 
@@ -111,9 +117,15 @@ server <- function(input, output, session) {
 }
 ```
 
+
+## Part 2 - Sentiment analysis
+
+After getting the most frequently occurring words, I would like to study the variables further to get more sufficient analysis on the answers.
+
 ### Look into some variables
 
 I discover that great amount of people are from USA and India, and there are 99 countries in total.
+
 ```{r}
 mycountry<-as.data.frame(table(hm_data$country))
 mycountryupdated<-mycountry[order(mycountry$Freq, decreasing = T),]
@@ -126,6 +138,7 @@ cbind(Countrylist,mycountrytop10)
 ```
 
 There are more male being asked than famale, and more single being asked than married. The median and mean of age are 30 and 31.83 if I omit NA value and values larger than or equal to 120.
+
 ```{r} 
 table(hm_data$gender)
 table(hm_data$marital)
@@ -137,6 +150,9 @@ mean(agesub)
 ```
 
 ### Explore text answers
+
+In order to find patterns easily, I decide to study top 10 countries at this time because all the countries in top 10 has more than 100 answers.
+
 ```{r}
 mytext<-as.data.frame(hm_data)[hm_data$country %in% mycountrytop10$Country,]
 textcount<-nchar(mytext$original_hm)
@@ -148,7 +164,7 @@ geom_histogram(color="darkblue", fill="lightblue") +
 facet_wrap(~ textcountry, scales="free",nrow = 4)
 ```
 
-Based on the shapes of above histograms, I find that different countries have different average length of answers, so I do more work on this.
+Based on the shapes of above histograms of top 10 countries, I find that different countries have different average characers' lengths for the answers, so I do more work on this.
 
 ```{r}
 mean_of_text<-setNames(aggregate(textdataframe[, 2], list(textdataframe$textcountry), mean),c("Countries","Mean"))
@@ -183,7 +199,7 @@ ggplot(d1, aes(Countries,value, col=variable)) +
   stat_smooth()
 ```
 
-As we can see from the above graph, USA and India have some extreme values of length. But since the data range is too large to make further analysis, I decide to look at data for each quantile seperately.
+As we can see from the above graph, USA and India have some extreme values for characters' lengths. But since the data range is too large to make further analysis, I decide to look at data for each quantile seperately.
 
 ```{r}
 d2<- read.table(text = s, header = T)
@@ -194,7 +210,9 @@ d2 %>% tidyr::gather("id", "value", 2:6) %>%
   facet_wrap(~id,scales="free", nrow=3)
 ```
 
-India, Venezuela, USA and UK seem to have the highest mean and median caompare to other top 10 countries. So I decide to study more on these four countries.
+India, Venezuela, USA and UK seem to have the highest mean and median caompare to other top 10 countries. I decide to study more on these four countries in order to get more valuable results.
+
+I select 3 original_hms that have the most charactors in the response sentences for each of the four countries (India, Venezuela, USA and UK), and I would like to see what these sentences are. 
 
 ```{r}
 four_countries<-as.data.frame(hm_data)[hm_data$country %in% c('USA','IND','VEN','GBR'),]
@@ -224,7 +242,7 @@ scale_colour_gradient2()+
 coord_flip()
 ```
 
-I select 3 original_hms that have the most charactors in the response sentences for each of the four countries (India, Venezuela, USA and UK), and I would like to see what these sentences are. 
+The numbers right after countries' names are different ranks of answers for different countries. For example, VEN1, VEN2 and VEN3 means "the longest answer for Venezuela", "the second longest answer for Venezuela" and "the third longest answer for Venezuela".
 
 ```{r}
 GBR1<-four_countries[which(nchar(four_countries$original_hm)==1233 
@@ -255,8 +273,8 @@ VEN2<-four_countries[which(nchar(four_countries$original_hm)==727
 VEN3<-four_countries[which(nchar(four_countries$original_hm)==606 
                            & four_countries$country=='VEN'),]
 
-sentence_fourcountries<-rbind(GBR1,GBR2,GBR3,IND1,IND2,IND3,USA1,USA2,USA3,VEN1,VEN2,VEN3)
-sentence_fourcountries
+sentence_fourcountries<-rbind(GBR1, GBR2, GBR3, IND1, IND2, IND3, USA1, USA2, USA3, VEN1, VEN2, VEN3)
+head(sentence_fourcountries, 2)
 ```
 
 UK: I found that for the selected three long answers in UK, all the the reflection periods are three months. So people trend to describe a story of their lifes, or a feeling caused by some events that can last for long time, such as "a very good traning program" and "spring has arrived".
@@ -332,7 +350,7 @@ VEN3_2<-four_countries[which(nchar(four_countries$original_hm)==15
                            & four_countries$country=='VEN'),]
 
 sentence_fourcountries2<-rbind(GBR1_2,GBR2_2,GBR3_2,IND1_2,IND2_2,IND3_2,USA1_2,USA2_2,USA3_2,VEN1_2,VEN2_2,VEN3_2)
-sentence_fourcountries2
+head(sentence_fourcountries2, 2)
 
 nrow(sentence_fourcountries2)
 
@@ -353,7 +371,7 @@ In top 3 shortest answers, people from Venezuela tend to talked about moments th
 
 However, I am not making further inference based on these results because the total numbers of respondents from different countries are quite different. It is not fair to only compare the numbers along. In addition, there could be some other reasons that are not directly related to this study, but still have influences on the study. 
 
-### Run the R Shiny app
+## Run the R Shiny app
 
 ```{r shiny app, warning=FALSE, message=FALSE}
 shinyApp(ui, server)
