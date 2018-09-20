@@ -2,9 +2,12 @@
 title: "Project1 Happy Moments Chun Zhai"
 author: "Chun Zhai"
 date: "September 10, 2018"
-output: html_notebook
-runtime: shiny
+output:
+  html_document:
+    df_print: paged
 ---
+
+# Happy Moments for Different People
 
 In this project, I conduct data analysis and visualization on different variables, including age, gender, marital status and country. Then I find that country is the variable I am most interested in (since there are so many countries in this data set and each country corresponds to various answers). I decide to study on the relaionships among country, original_hm and reflection_period. Finally, I discover that there could be some hidden patterns for the answers after spending time exploring them on different countries.
 
